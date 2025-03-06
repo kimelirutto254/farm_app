@@ -1,20 +1,21 @@
 #!/bin/bash
 
-# Exit if any command fails
-set -e
+# Exit immediately if a command exits with a non-zero status
+set -e  
 
 echo "Installing Flutter..."
 
-# Clone Flutter repository
-git clone https://github.com/flutter/flutter.git -b stable --depth 1
+# Clone Flutter with the correct branch
+git clone https://github.com/flutter/flutter.git --depth 1 || {
+    echo "Failed to clone Flutter repository. Trying default branch."
+    git clone https://github.com/flutter/flutter.git -b main --depth 1
+}
 export PATH="$PWD/flutter/bin:$PATH"
 
-# Disable root user check
-export FLUTTER_SUPPRESS_ANALYTICS=true
-export NO_COLOR=true
-export CI=true
-
 echo "Flutter installed successfully."
+
+# Verify Flutter is installed
+flutter --version
 
 # Enable web support
 flutter config --enable-web
